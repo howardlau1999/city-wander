@@ -30,6 +30,15 @@
 .cw-map-error button { margin-left: 10px; background: transparent; border: 0; color: #2b5845; cursor: pointer; text-decoration: underline; font-size: 12px; }
 .cw-map-loading { position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); padding: 15px 18px; z-index: 2; background: #fffefa; border: 1px solid #e4e6dc; border-radius: 10px; display: flex; align-items: center; gap: 10px; white-space: nowrap; font-size: 13px; box-shadow: 0 8px 20px #2b3d2510; }
 .cw-map-spinner { width: 15px; height: 15px; border: 2px solid #dce4d4; border-top-color: #2b5845; border-radius: 50%; animation: cw-map-spin 1s linear infinite; }
+.cw-map-empty { position: absolute; z-index: 2; top: 50%; left: 50%; width: min(340px, calc(100% - 80px)); transform: translate(-50%, -50%); display: grid; justify-items: center; gap: 12px; text-align: center; padding: 24px 20px; border: 1px solid #e0e4d8; border-radius: 14px; background: #f9f9f0ed; pointer-events: none; }
+.cw-map-empty > svg { height: 32px; width: 32px; color: #7f9676; }
+.cw-map-empty strong { font-size: 14px; font-weight: 550; line-height: 1.7; }
+.cw-map-empty p { font-size: 12px; line-height: 1.8; color: #7b8978; }
+.cw-map-empty small { font-size: 10px; color: #939c8c; }
+.cw-map-empty-live { top: auto; bottom: 64px; left: 24px; transform: none; width: min(320px, calc(100% - 100px)); padding: 12px 15px; gap: 5px; text-align: left; justify-items: start; box-shadow: 0 3px 12px #273d2910; }
+.cw-map-empty-live > svg { display: none; }
+.cw-map-empty-live strong { font-size: 12px; }
+.cw-map-empty-live p { font-size: 11px; }
 .cw-amap-pin { width: 32px; height: 32px; border-radius: 50%; border: 2px solid #2b5845; background: #fffdf7; color: #2b5845; display: grid; place-items: center; font-size: 14px; font-weight: 700; box-shadow: 0 3px 8px #273d2933; }
 .cw-amap-pin-origin { background: #2b5845; color: #fffdf7; border-color: #fffdf7; }
 @keyframes cw-map-spin { to { transform: rotate(360deg); } }
@@ -42,5 +51,6 @@
   .cw-map-controls { right: 14px; bottom: 79px; }
   .cw-map-controls button { width: 34px; height: 34px; }
   .cw-map-error { left: 16px; right: 16px; top: 64px; }
+  .cw-map-empty-live { left: 16px; bottom: 55px; }
 }
 @media (prefers-reduced-motion: reduce) { .cw-map-spinner { animation: none; } }

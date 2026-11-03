@@ -3,8 +3,9 @@ import type { Coordinate, Place, PlanRequest, PlanResponse, Preference, WanderRo
 import { ApiError, array, coordinate, locationString, object, parsePlaces, string, type AmapRequest } from './amap.js';
 
 export const coordinateSchema = z.tuple([z.number().finite().min(-180).max(180), z.number().finite().min(-90).max(90)]);
+const citySchema = z.object({ name: z.string().trim().min(1).max(60), adcode: z.string().regex(/^[1-9]\d{5}$/), center: coordinateSchema });
 export const planSchema = z.object({
-  origin: z.object({ id: z.string().min(1).max(120), name: z.string().trim().min(1).max(120), location: coordinateSchema, address: z.string().max(250).optional() }),
+  origin: z.object({ id: z.string().min(1).max(120), name: z.string().trim().min(1).max(120), location: coordinateSchema, address: z.string().max(250).optional(), city: citySchema.optional() }),
   mode: z.enum(['driving', 'walking']),
   minutes: z.number().int().min(15).max(180),
   preference: z.enum(['surprise', 'park', 'waterfront', 'elevated']),

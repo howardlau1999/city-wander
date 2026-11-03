@@ -5,10 +5,13 @@ import { fileURLToPath } from 'node:url';
 import { z } from 'zod';
 import { ApiError, coordinate, createAmapClient, locationString, parsePlaces, type AmapRequest } from './amap.js';
 import { coordinateSchema, planSchema, planWander } from './planner.js';
+import { DEFAULT_CITY } from '../shared/cities.js';
+import { createCitySearch, lookupLocationCity } from './cities.js';
 
 export function createApp(env: NodeJS.ProcessEnv = process.env, injectedApi?: AmapRequest) {
   const app = express();
   const api = injectedApi ?? createAmapClient(env.AMAP_WEB_KEY ?? '');
+  const searchCities = createCitySearch(api);
   app.disable('x-powered-by');
   app.use(express.json({ limit: '12kb' }));
   app.use('/api', (_request, response, next) => { response.setHeader('Cache-Control', 'no-store'); next(); });
@@ -32,9 +35,21 @@ export function createApp(env: NodeJS.ProcessEnv = process.env, injectedApi?: Am
   }));
   app.get('/api/places', async (request, response, next) => {
     try {
-      const input = z.object({ query: z.string().trim().min(1).max(80), city: z.string().trim().min(1).max(40).default('杭州') }).parse(request.query);
+      const input = z.object({ query: z.string().trim().min(1).max(80), city: z.string().trim().min(1).max(40).default(DEFAULT_CITY.adcode) }).parse(request.query);
       const result = await api('/v3/place/text', { keywords: input.query, city: input.city, citylimit: 'true', offset: 10, page: 1, extensions: 'all' });
       response.json({ places: parsePlaces(result) });
+    } catch (error) { next(error); }
+  });
+  app.get('/api/cities', async (request, response, next) => {
+    try {
+      const input = z.object({ query: z.string().trim().min(1).max(40) }).parse(request.query);
+      response.json({ cities: await searchCities(input.query) });
+    } catch (error) { next(error); }
+  });
+  app.post('/api/location-city', async (request, response, next) => {
+    try {
+      const input = z.object({ location: coordinateSchema }).parse(request.body);
+      response.json(await lookupLocationCity(api, input.location));
     } catch (error) { next(error); }
   });
   app.post('/api/convert-location', async (request, response, next) => {

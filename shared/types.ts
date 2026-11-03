@@ -1,7 +1,8 @@
 export type Coordinate = [number, number];
 export type TravelMode = 'driving' | 'walking';
 export type Preference = 'surprise' | 'park' | 'waterfront' | 'elevated';
-export interface Place { id: string; name: string; location: Coordinate; address?: string }
+export interface City { name: string; adcode: string; center: Coordinate }
+export interface Place { id: string; name: string; location: Coordinate; address?: string; city?: City }
 export interface PlanRequest {
   origin: Place;
   mode: TravelMode;
